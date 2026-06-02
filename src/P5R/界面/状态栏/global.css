@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --c-bg: #0a0a0a;
+  --c-surface: #111;
+  --c-primary: #e60012;
+  --c-primary-glow: rgba(230, 0, 18, 0.4);
+  --c-border: rgba(230, 0, 18, 0.2);
+  --c-text: #f0f0f0;
+  --c-text-muted: #666;
+  --c-accent: #ff1a2e;
+  --font-p5: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+}
+
+body {
+  background: transparent;
+  font-family: var(--font-p5);
+  color: var(--c-text);
+  overflow: hidden;
+}

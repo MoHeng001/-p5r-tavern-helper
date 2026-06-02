@@ -1,0 +1,663 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "default": {},
+  "type": "object",
+  "properties": {
+    "主角信息": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "身份": {
+          "default": "Joker",
+          "type": "string"
+        },
+        "姓名": {
+          "default": "雨宫莲",
+          "type": "string"
+        },
+        "性别": {
+          "default": "男",
+          "type": "string"
+        },
+        "年龄": {
+          "default": 16,
+          "type": "number"
+        },
+        "外貌": {
+          "default": "",
+          "type": "string"
+        },
+        "性格": {
+          "default": "",
+          "type": "string"
+        },
+        "五维": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "知识": {
+              "default": 1,
+              "type": "number"
+            },
+            "勇气": {
+              "default": 1,
+              "type": "number"
+            },
+            "灵巧": {
+              "default": 1,
+              "type": "number"
+            },
+            "温柔": {
+              "default": 1,
+              "type": "number"
+            },
+            "魅力": {
+              "default": 1,
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "时间系统": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "日期": {
+          "default": "2015年04月09日-星期四",
+          "type": "string"
+        },
+        "时段": {
+          "default": "放学后",
+          "type": "string"
+        },
+        "天气": {
+          "default": "阴",
+          "type": "string"
+        },
+        "当前地点": {
+          "default": "东京·四轩茶屋",
+          "type": "string"
+        }
+      }
+    },
+    "剧情进度": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "当前阶段": {
+          "default": "序章",
+          "type": "string"
+        },
+        "当前宫殿": {
+          "default": "",
+          "type": "string"
+        },
+        "截止日": {
+          "default": "",
+          "type": "string"
+        },
+        "攻略状态": {
+          "default": "未开始",
+          "type": "string"
+        },
+        "剩余天数": {
+          "default": 0,
+          "type": "number"
+        },
+        "宫殿主结局": {
+          "default": "未攻略",
+          "type": "string"
+        },
+        "已触发主线事件": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "资源": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "金钱": {
+          "default": 0,
+          "type": "number"
+        },
+        "道具": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "日历": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "临时": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "标题": {
+                "type": "string"
+              },
+              "内容": {
+                "type": "string"
+              },
+              "时间": {
+                "default": "",
+                "type": "string"
+              },
+              "结束时间": {
+                "default": "",
+                "type": "string"
+              },
+              "重复规则": {
+                "default": "无",
+                "type": "string"
+              }
+            },
+            "required": [
+              "标题",
+              "内容"
+            ]
+          }
+        },
+        "重复": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "标题": {
+                "type": "string"
+              },
+              "内容": {
+                "type": "string"
+              },
+              "时间": {
+                "default": "",
+                "type": "string"
+              },
+              "结束时间": {
+                "default": "",
+                "type": "string"
+              },
+              "重复规则": {
+                "default": "无",
+                "type": "string"
+              }
+            },
+            "required": [
+              "标题",
+              "内容"
+            ]
+          }
+        }
+      }
+    },
+    "事件信号": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "怪盗团": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "坂本龙司": {
+          "$ref": "#/$defs/__schema0"
+        },
+        "摩尔加纳": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "在场状态": {
+              "default": "不在场",
+              "type": "string"
+            },
+            "关系": {
+              "default": "陌生",
+              "type": "string"
+            },
+            "态度": {
+              "default": "陌生",
+              "type": "string"
+            },
+            "COOP等级": {
+              "default": 0,
+              "type": "number"
+            },
+            "互动记录": {
+              "default": {},
+              "type": "object",
+              "properties": {
+                "难忘事件": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "最近互动": {
+                  "default": "",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "高卷杏": {
+          "$ref": "#/$defs/__schema1"
+        },
+        "喜多川祐介": {
+          "$ref": "#/$defs/__schema0"
+        },
+        "新岛真": {
+          "$ref": "#/$defs/__schema1"
+        },
+        "佐仓双叶": {
+          "$ref": "#/$defs/__schema1"
+        },
+        "奥村春": {
+          "$ref": "#/$defs/__schema1"
+        }
+      }
+    },
+    "COOP角色": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "明智吾郎": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "武见妙": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "川上贞代": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "御船千早": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "佐仓惣治郎": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "岩井宗久": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "大宅一子": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "三岛由辉": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "吉田寅之助": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "东乡一二三": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "织田信也": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "新岛冴": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "芳泽霞": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "丸喜拓人": {
+          "$ref": "#/$defs/__schema2"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "__schema0": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "在场状态": {
+          "default": "不在场",
+          "type": "string"
+        },
+        "关系": {
+          "default": "陌生",
+          "type": "string"
+        },
+        "态度": {
+          "default": "陌生",
+          "type": "string"
+        },
+        "COOP等级": {
+          "default": 0,
+          "type": "number"
+        },
+        "外貌特征": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "当前服装": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "上装": {
+              "default": "",
+              "type": "string"
+            },
+            "下装": {
+              "default": "",
+              "type": "string"
+            },
+            "鞋子": {
+              "default": "",
+              "type": "string"
+            }
+          }
+        },
+        "效果状态": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "类型": {
+                "type": "string"
+              },
+              "效果": {
+                "type": "string"
+              },
+              "剩余时间": {
+                "type": "string"
+              },
+              "来源": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "类型",
+              "效果",
+              "剩余时间",
+              "来源"
+            ]
+          }
+        },
+        "互动记录": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "难忘事件": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "最近互动": {
+              "default": "",
+              "type": "string"
+            }
+          }
+        },
+        "性经验": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "性交次数": {
+              "default": 0,
+              "type": "number"
+            },
+            "性伴侣数": {
+              "default": 0,
+              "type": "number"
+            },
+            "性癖好": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "生理状态": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "阴茎状态": {
+              "default": "未勃起",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "__schema1": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "在场状态": {
+          "default": "不在场",
+          "type": "string"
+        },
+        "关系": {
+          "default": "陌生",
+          "type": "string"
+        },
+        "态度": {
+          "default": "陌生",
+          "type": "string"
+        },
+        "COOP等级": {
+          "default": 0,
+          "type": "number"
+        },
+        "外貌特征": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "当前服装": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "上装": {
+              "default": "",
+              "type": "string"
+            },
+            "下装": {
+              "default": "",
+              "type": "string"
+            },
+            "鞋子": {
+              "default": "",
+              "type": "string"
+            },
+            "内衣": {
+              "default": "",
+              "type": "string"
+            },
+            "袜子": {
+              "default": "",
+              "type": "string"
+            }
+          }
+        },
+        "效果状态": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "类型": {
+                "type": "string"
+              },
+              "效果": {
+                "type": "string"
+              },
+              "剩余时间": {
+                "type": "string"
+              },
+              "来源": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "类型",
+              "效果",
+              "剩余时间",
+              "来源"
+            ]
+          }
+        },
+        "互动记录": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "难忘事件": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "最近互动": {
+              "default": "",
+              "type": "string"
+            }
+          }
+        },
+        "性经验": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "处女": {
+              "default": true,
+              "type": "boolean"
+            },
+            "性交次数": {
+              "default": 0,
+              "type": "number"
+            },
+            "性伴侣数": {
+              "default": 0,
+              "type": "number"
+            },
+            "初次对象": {
+              "default": "",
+              "type": "string"
+            },
+            "口交经验": {
+              "default": "",
+              "type": "string"
+            },
+            "性交经验": {
+              "default": "",
+              "type": "string"
+            },
+            "性癖好": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "生理状态": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "阴道润滑": {
+              "default": "",
+              "type": "string"
+            },
+            "乳头状态": {
+              "default": "",
+              "type": "string"
+            },
+            "阴蒂状态": {
+              "default": "",
+              "type": "string"
+            },
+            "子宫状态": {
+              "default": "",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "__schema2": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "在场状态": {
+          "default": "不在场",
+          "type": "string"
+        },
+        "关系": {
+          "default": "陌生",
+          "type": "string"
+        },
+        "COOP等级": {
+          "default": 0,
+          "type": "number"
+        },
+        "互动记录": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "难忘事件": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "最近互动": {
+              "default": "",
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
