@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P5R 状态栏 - 独立预览</title>
+<!-- Google Fonts via Chinese mirror -->
+<link rel="stylesheet" href="https://fonts.googleapis.cn/css2?family=Anton&family=Noto+Sans+JP:wght@700;900&display=swap">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #1a1a2e;
+  font-family: 'Noto Sans JP', 'Microsoft YaHei', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  min-height: 100vh;
+}
+
+/* ===== P5R Status Bar Styles ===== */
+.p5r-status-bar {
+  --p5-red: #E60012;
+  --p5-black: #111111;
+  --p5-white: #F8F8F8;
+  --p5-yellow: #FFD700;
+
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--p5-black);
+  border: 3px solid var(--p5-white);
+  box-shadow: 8px 8px 0px rgba(230, 0, 18, 0.8), 0 0 20px rgba(0,0,0,0.5);
+  border-radius: 4px;
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  color: var(--p5-white);
+  position: relative;
+  z-index: 1000;
+  transform: skewX(-2deg);
+}
+
+.status-panel {
+  background: var(--p5-red);
+  padding: 14px 18px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background-image:
+    linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.1) 75%),
+    linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.1) 75%);
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+}
+
+.status-panel:hover {
+  filter: brightness(1.1);
+}
+
+.date-weather {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Anton', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.date { color: var(--p5-white); }
+.weather { color: var(--p5-yellow); }
+
+.location-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--p5-black);
+  padding: 8px 14px;
+  border-radius: 2px;
+  transform: skewX(5deg);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.location {
+  font-weight: 900;
+  font-size: 1rem;
+  color: var(--p5-white);
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slot {
+  font-weight: 900;
+  color: var(--p5-red);
+  background: var(--p5-white);
+  padding: 2px 10px;
+  border-radius: 2px;
+  font-size: 0.9rem;
+  transform: skewX(-10deg);
+}
+
+.toggle-hint {
+  position: absolute;
+  right: 16px;
+  top: 14px;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.5);
+}
+
+/* Map View */
+.map-container {
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: #B21010;
+}
+
+.map-container.is-open {
+  height: 280px;
+  opacity: 1;
+  border-top: 4px solid var(--p5-black);
+}
+
+.map-area {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+}
+
+.map-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.line-path {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: drawLine 2s forwards ease-out;
+}
+
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}
+
+.spot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.spot:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+  z-index: 10;
+}
+
+.spot-icon {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  margin-bottom: 4px;
+}
+
+.spot-core {
+  width: 100%;
+  height: 100%;
+  background: var(--p5-white);
+  border: 3px solid var(--p5-black);
+  border-radius: 50%;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.spot.active .spot-core {
+  background: var(--p5-yellow);
+  transform: scale(1.3);
+  border-color: var(--p5-black);
+}
+
+.spot-pulse {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 215, 0, 0.4);
+  border-radius: 50%;
+  z-index: 1;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.spot-label {
+  font-weight: 900;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  transform: skewX(-5deg) rotate(-5deg);
+}
+
+.label-bg {
+  background: var(--p5-black);
+  color: var(--p5-white);
+  padding: 2px 6px;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+}
+
+.spot.active .label-bg {
+  background: var(--p5-white);
+  color: var(--p5-black);
+  font-size: 0.85rem;
+  box-shadow: 3px 3px 0 var(--p5-red);
+}
+
+/* ===== Demo switcher ===== */
+.demo-controls {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  max-width: 420px;
+}
+
+.demo-btn {
+  padding: 6px 14px;
+  border: 2px solid var(--p5-red);
+  background: transparent;
+  color: #ccc;
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.demo-btn:hover {
+  background: var(--p5-red);
+  color: #fff;
+}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<!-- Dependencies from CDN (global builds share the SAME Vue instance) -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/pinia@2/dist/pinia.iife.js"></script>
+
+<script>
+// ===== Mock Data =====
+const mockStatData = {
+  时间系统: {
+    日期: '2015年04月09日-星期四',
+    时段: '放学后',
+    天气: '阴',
+    当前地点: '东京·四轩茶屋'
+  }
+};
+
+// ===== Pinia Store =====
+const { createPinia, defineStore } = Pinia;
+const pinia = createPinia();
+
+const useDataStore = defineStore('data', {
+  state: () => ({
+    stat_data: mockStatData
+  }),
+  actions: {
+    setLocation(loc) {
+      this.stat_data.时间系统.当前地点 = loc;
+    }
+  }
+});
+
+// ===== Vue App =====
+const { createApp, computed, ref } = Vue;
+
+const App = {
+  setup() {
+    const store = useDataStore();
+
+    const info = computed(() => {
+      const data = store.stat_data;
+      const loc = data?.时间系统?.当前地点 ?? '';
+      const slot = data?.时间系统?.时段 ?? '';
+      const date = data?.时间系统?.日期 ?? '';
+      const weather = data?.时间系统?.天气 ?? '';
+      return { loc, slot, date, weather };
+    });
+
+    const activeId = computed(() => {
+      const data = store.stat_data;
+      const loc = (data?.时间系统?.当前地点 ?? '').toLowerCase();
+      if (loc.includes('四轩茶屋') || loc.includes('四軒茶屋')) return 'yongen';
+      if (loc.includes('涉谷') || loc.includes('渋谷') || loc.includes('涩谷')) return 'shibuya';
+      if (loc.includes('秀尽') || loc.includes('学园')) return 'shujin';
+      if (loc.includes('吉祥寺')) return 'kichijoji';
+      if (loc.includes('新宿')) return 'shinjuku';
+      if (loc.includes('秋叶原') || loc.includes('秋葉原')) return 'akihabara';
+      if (loc.includes('印象空间')) return 'mementos';
+      return '';
+    });
+
+    const regions = [
+      { id: 'kichijoji', label: '吉祥寺', x: 10, y: 15 },
+      { id: 'shinjuku', label: '新宿', x: 28, y: 25 },
+      { id: 'yongen', label: '四轩茶屋', x: 15, y: 58 },
+      { id: 'shibuya', label: '渋谷', x: 32, y: 45 },
+      { id: 'akihabara', label: '秋葉原', x: 75, y: 28 },
+      { id: 'shujin', label: '秀尽学园(青山一丁目)', x: 48, y: 40 },
+      { id: 'mementos', label: '印象空间', x: 80, y: 70 },
+    ];
+
+    const lines = [
+      { path: 'M 10 15 L 28 25 L 32 45 L 48 40 L 75 28', color: '#ffb300' },
+      { path: 'M 15 58 L 32 45', color: '#00e5ff' },
+      { path: 'M 32 45 L 80 70', color: '#d500f9' },
+    ];
+
+    const showMap = ref(false);
+    const toggleMap = () => { showMap.value = !showMap.value; };
+
+    return { info, activeId, regions, lines, showMap, toggleMap, store };
+  },
+
+  template: `
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <div class="p5r-status-bar">
+        <!-- Header Status Panel -->
+        <div class="status-panel" @click="toggleMap">
+          <div class="date-weather">
+            <span class="date">{{ info.date || '----/--/--' }}</span>
+            <span class="weather" v-if="info.weather">☁ {{ info.weather }}</span>
+          </div>
+          <div class="location-slot">
+            <div class="location">
+              <span>📍</span> {{ info.loc || 'Unknown Location' }}
+            </div>
+            <div class="slot">{{ info.slot || '---' }}</div>
+          </div>
+          <div class="toggle-hint">{{ showMap ? '▲' : '▼ 点击展开地图' }}</div>
+        </div>
+
+        <!-- Map View Panel -->
+        <div class="map-container" :class="{ 'is-open': showMap }">
+          <div class="map-area">
+            <!-- SVG connecting lines -->
+            <svg class="map-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <path
+                v-for="(line, idx) in lines"
+                :key="idx"
+                :d="line.path"
+                :stroke="line.color"
+                stroke-width="1.5"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="line-path"
+              />
+            </svg>
+
+            <!-- Nodes -->
+            <div
+              v-for="r in regions"
+              :key="r.id"
+              class="spot"
+              :class="{ active: activeId === r.id }"
+              :style="{ left: r.x + '%', top: r.y + '%' }"
+            >
+              <div class="spot-icon">
+                <div class="spot-core"></div>
+                <div class="spot-pulse" v-if="activeId === r.id"></div>
+              </div>
+              <div class="spot-label">
+                <span class="label-bg">{{ r.label }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Demo: Location Switcher -->
+      <div class="demo-controls">
+        <button class="demo-btn" @click="store.setLocation('东京·四轩茶屋')">四轩茶屋</button>
+        <button class="demo-btn" @click="store.setLocation('东京·渋谷')">渋谷</button>
+        <button class="demo-btn" @click="store.setLocation('东京·新宿')">新宿</button>
+        <button class="demo-btn" @click="store.setLocation('秀尽学园')">秀尽学园</button>
+        <button class="demo-btn" @click="store.setLocation('东京·吉祥寺')">吉祥寺</button>
+        <button class="demo-btn" @click="store.setLocation('东京·秋葉原')">秋葉原</button>
+        <button class="demo-btn" @click="store.setLocation('印象空间')">印象空间</button>
+      </div>
+    </div>
+  `
+};
+
+const app = createApp(App);
+app.use(pinia);
+app.mount('#app');
+</script>
+</body>
+</html>
