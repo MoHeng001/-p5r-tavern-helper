@@ -15,6 +15,7 @@ const info = computed(() => {
 
 const view = ref('main')
 const selectedRegion = ref('')
+const selectedSub = ref('')
 const selectedSpot = ref('')
 const showMap = ref(false)
 
@@ -24,39 +25,97 @@ const toggleMap = () => {
     setTimeout(() => {
       view.value = 'main'
       selectedRegion.value = ''
+      selectedSub.value = ''
       selectedSpot.value = ''
     }, 300)
   }
 }
 
 const mapData: Record<string, any> = {
-  kichijoji: { label: '吉祥寺', x: 10, y: 18, spots: [{ id: 'darts', label: '飞镖俱乐部' }, { id: 'jazz', label: '爵士俱乐部' }, { id: 'temple', label: '寺庙' }] },
-  ogikubo: { label: '荻洼', x: 20, y: 18, spots: [{ id: 'ramen', label: '拉面店' }] },
-  nakano: { label: '中野', x: 30, y: 22, spots: [] },
-  shinjuku: { label: '新宿', x: 35, y: 30, spots: [{ id: 'redlight', label: '欢乐街' }, { id: 'bar', label: '十字路口酒吧' }] },
-  ichigaya: { label: '市谷', x: 45, y: 30, spots: [{ id: 'fishing', label: '钓鱼池' }] },
-  suidobashi: { label: '水道桥', x: 60, y: 25, spots: [] },
-  ueno: { label: '上野', x: 65, y: 15, spots: [{ id: 'museum', label: '美术馆' }] },
-  asakusa: { label: '浅草·押上', x: 80, y: 15, spots: [{ id: 'skytree', label: '天空树' }] },
-  akihabara: { label: '秋叶原', x: 75, y: 25, spots: [{ id: 'arcade', label: '游戏厅' }, { id: 'maid', label: '女仆咖啡厅' }] },
-  kanda: { label: '神田', x: 80, y: 35, spots: [{ id: 'church', label: '教会' }] },
-  maihama: { label: '舞滨', x: 95, y: 45, spots: [{ id: 'destiny', label: '命运乐园' }] },
-  ginza: { label: '银座', x: 75, y: 55, spots: [{ id: 'sushi', label: '高级寿司店' }] },
-  tsukishima: { label: '月岛', x: 90, y: 65, spots: [{ id: 'monja', label: '文字烧店' }] },
-  jinbocho: { label: '神保町', x: 65, y: 40, spots: [{ id: 'bookstore', label: '古书店' }] },
-  nagatacho: { label: '永田町', x: 55, y: 40, spots: [] },
-  akasaka: { label: '赤坂见附', x: 55, y: 50, spots: [] },
-  roppongi: { label: '六本木', x: 55, y: 60, spots: [] },
-  aoyama: { label: '青山一丁目', x: 45, y: 45, spots: [{ id: 'shujin', label: '秀尽学园' }] },
-  shibuya: { label: '涉谷', x: 35, y: 50, spots: [{ id: 'station', label: '站前广场' }, { id: 'central', label: '中央大街' }, { id: 'underground', label: '地下通道' }, { id: 'hideout', label: '秘密基地' }] },
-  harajuku: { label: '原宿', x: 30, y: 40, spots: [{ id: 'takeshita', label: '竹下通' }] },
-  meiji: { label: '明治神宫前', x: 20, y: 40, spots: [{ id: 'shrine', label: '明治神宫' }] },
-  inokashira: { label: '井之头公园', x: 10, y: 45, spots: [{ id: 'park', label: '公园' }] },
-  yongen: { label: '四轩茶屋', x: 15, y: 60, spots: [{ id: 'leblanc', label: '卢布朗' }, { id: 'clinic', label: '诊所' }, { id: 'laundromat', label: '投币洗衣店' }, { id: 'batting', label: '击球中心' }] },
-  shinagawa: { label: '品川', x: 45, y: 70, spots: [{ id: 'aquarium', label: '水族馆' }] },
-  motomachi: { label: '元町中华街', x: 10, y: 85, spots: [{ id: 'chinatown', label: '中华街' }] },
-  miura: { label: '三浦海岸', x: 40, y: 90, spots: [{ id: 'beach', label: '海滨' }] },
-  odaiba: { label: '台场海滨公园', x: 80, y: 85, spots: [{ id: 'ferris', label: '摩天轮' }] }
+  kichijoji: { label: '吉祥寺', x: 10, y: 18, subs: [{ id: 'kichijoji_main', label: '吉祥寺', spots: [{ id: 'darts', label: '飞镖俱乐部' }, { id: 'jazz', label: '爵士俱乐部' }, { id: 'temple', label: '寺庙' }] }] },
+  ogikubo: { label: '荻洼', x: 20, y: 18, subs: [{ id: 'ogikubo_main', label: '荻洼', spots: [{ id: 'ramen', label: '拉面店' }] }] },
+  nakano: { label: '中野', x: 30, y: 22, subs: [] },
+  shinjuku: { label: '新宿', x: 35, y: 30, subs: [{ id: 'shinjuku_main', label: '新宿', spots: [{ id: 'redlight', label: '欢乐街' }, { id: 'bar', label: '十字路口酒吧' }] }] },
+  ichigaya: { label: '市谷', x: 45, y: 30, subs: [{ id: 'ichigaya_main', label: '市谷', spots: [{ id: 'fishing', label: '钓鱼池' }] }] },
+  suidobashi: { label: '水道桥', x: 60, y: 25, subs: [] },
+  ueno: { label: '上野', x: 65, y: 15, subs: [{ id: 'ueno_main', label: '上野', spots: [{ id: 'museum', label: '美术馆' }] }] },
+  asakusa: { label: '浅草·押上', x: 80, y: 15, subs: [{ id: 'asakusa_main', label: '浅草·押上', spots: [{ id: 'skytree', label: '天空树' }] }] },
+  akihabara: { label: '秋叶原', x: 75, y: 25, subs: [{ id: 'akihabara_main', label: '秋叶原', spots: [{ id: 'arcade', label: '游戏厅' }, { id: 'maid', label: '女仆咖啡厅' }] }] },
+  kanda: { label: '神田', x: 80, y: 35, subs: [{ id: 'kanda_main', label: '神田', spots: [{ id: 'church', label: '教会' }] }] },
+  maihama: { label: '舞滨', x: 95, y: 45, subs: [{ id: 'maihama_main', label: '舞滨', spots: [{ id: 'destiny', label: '命运乐园' }] }] },
+  ginza: { label: '银座', x: 75, y: 55, subs: [{ id: 'ginza_main', label: '银座', spots: [{ id: 'sushi', label: '高级寿司店' }] }] },
+  tsukishima: { label: '月岛', x: 90, y: 65, subs: [{ id: 'tsukishima_main', label: '月岛', spots: [{ id: 'monja', label: '文字烧店' }] }] },
+  jinbocho: { label: '神保町', x: 65, y: 40, subs: [{ id: 'jinbocho_main', label: '神保町', spots: [{ id: 'bookstore', label: '古书店' }] }] },
+  nagatacho: { label: '永田町', x: 55, y: 40, subs: [] },
+  akasaka: { label: '赤坂见附', x: 55, y: 50, subs: [] },
+  roppongi: { label: '六本木', x: 55, y: 60, subs: [] },
+  aoyama: { 
+    label: '青山一丁目', x: 45, y: 45, 
+    subs: [
+      { 
+        id: 'shujin_1f', 
+        label: '秀尽学园一楼', 
+        spots: [
+          { id: 'courtyard', label: '中庭' }, 
+          { id: 'practice_bldg', label: '实习大楼' }, 
+          { id: 'school_store', label: '小卖部' }, 
+          { id: 'entrance', label: '玄关' }, 
+          { id: 'nurse_office', label: '医务室' }
+        ] 
+      },
+      { 
+        id: 'shujin_2f', 
+        label: '秀尽学园二楼', 
+        spots: [
+          { id: 'class_2d', label: '教室2-D' }, 
+          { id: 'faculty_office', label: '教师办公室' }, 
+          { id: 'pe_faculty_office', label: '体育教师室' }
+        ] 
+      },
+      { 
+        id: 'shujin_3f', 
+        label: '秀尽学园三楼', 
+        spots: [
+          { id: 'library', label: '图书室' }, 
+          { id: 'student_council', label: '学生会办公室' }, 
+          { id: 'rooftop', label: '天台' }
+        ] 
+      }
+    ] 
+  },
+  shibuya: { 
+    label: '涉谷', x: 35, y: 50, 
+    subs: [
+      { id: 'station', label: '站前广场', spots: [] }, 
+      { id: 'central', label: '中央大街', spots: [] }, 
+      { id: 'underground', label: '地下通道', spots: [] }, 
+      { id: 'hideout', label: '秘密基地', spots: [] }
+    ] 
+  },
+  harajuku: { label: '原宿', x: 30, y: 40, subs: [{ id: 'harajuku_main', label: '原宿', spots: [{ id: 'takeshita', label: '竹下通' }] }] },
+  meiji: { label: '明治神宫前', x: 20, y: 40, subs: [{ id: 'meiji_main', label: '明治神宫前', spots: [{ id: 'shrine', label: '明治神宫' }] }] },
+  inokashira: { label: '井之头公园', x: 10, y: 45, subs: [{ id: 'inokashira_main', label: '井之头公园', spots: [{ id: 'park', label: '公园' }] }] },
+  yongen: { 
+    label: '四轩茶屋', x: 15, y: 60, 
+    subs: [
+      { 
+        id: 'alley', 
+        label: '小巷', 
+        spots: [
+          { id: 'leblanc', label: '卢布朗' }, 
+          { id: 'clinic', label: '诊所' }, 
+          { id: 'laundromat', label: '投币洗衣店' }, 
+          { id: 'batting', label: '击球中心' },
+          { id: 'bathhouse', label: '澡堂' },
+          { id: 'theater', label: '电影院' }
+        ] 
+      }
+    ] 
+  },
+  shinagawa: { label: '品川', x: 45, y: 70, subs: [{ id: 'shinagawa_main', label: '品川', spots: [{ id: 'aquarium', label: '水族馆' }] }] },
+  motomachi: { label: '元町中华街', x: 10, y: 85, subs: [{ id: 'motomachi_main', label: '元町中华街', spots: [{ id: 'chinatown', label: '中华街' }] }] },
+  miura: { label: '三浦海岸', x: 40, y: 90, subs: [{ id: 'miura_main', label: '三浦海岸', spots: [{ id: 'beach', label: '海滨' }] }] },
+  odaiba: { label: '台场海滨公园', x: 80, y: 85, subs: [{ id: 'odaiba_main', label: '台场海滨公园', spots: [{ id: 'ferris', label: '摩天轮' }] }] }
 }
 
 const regions = Object.keys(mapData).map(k => ({ id: k, ...mapData[k] }))
@@ -84,11 +143,24 @@ const currentActiveRegion = computed(() => {
   return ''
 })
 
+const currentActiveSub = computed(() => {
+  const loc = info.value.loc
+  const region = mapData[currentActiveRegion.value]
+  if (!region) return ''
+  for (const sub of region.subs) {
+    if (loc.includes(sub.label)) return sub.id
+  }
+  return ''
+})
+
 const currentActiveSpot = computed(() => {
   const loc = info.value.loc
   const region = mapData[currentActiveRegion.value]
   if (!region) return ''
-  for (const spot of region.spots) {
+  const subId = currentActiveSub.value
+  const sub = region.subs.find((s:any) => s.id === subId)
+  if (!sub) return ''
+  for (const spot of sub.spots) {
     if (loc.includes(spot.label)) return spot.id
   }
   return ''
@@ -96,8 +168,15 @@ const currentActiveSpot = computed(() => {
 
 const openSubMap = (regionId: string) => {
   selectedRegion.value = regionId
+  selectedSub.value = ''
   selectedSpot.value = ''
   view.value = 'sub'
+}
+
+const openSpotMap = (subId: string) => {
+  selectedSub.value = subId
+  selectedSpot.value = ''
+  view.value = 'spot'
 }
 
 const selectSpot = (spotId: string) => {
@@ -105,18 +184,31 @@ const selectSpot = (spotId: string) => {
 }
 
 const goBack = () => {
-  view.value = 'main'
-  selectedRegion.value = ''
-  selectedSpot.value = ''
+  if (view.value === 'spot') {
+    view.value = 'sub'
+    selectedSub.value = ''
+    selectedSpot.value = ''
+  } else {
+    view.value = 'main'
+    selectedRegion.value = ''
+    selectedSub.value = ''
+    selectedSpot.value = ''
+  }
 }
 
 const travel = () => {
   if (!selectedRegion.value) return;
   let targetLocation = `东京·${mapData[selectedRegion.value].label}`
-  if (selectedSpot.value) {
-    const spot = mapData[selectedRegion.value].spots.find((s: any) => s.id === selectedSpot.value)
-    if (spot) {
-      targetLocation += `·${spot.label}`
+  if (selectedSub.value) {
+    const sub = mapData[selectedRegion.value].subs.find((s: any) => s.id === selectedSub.value)
+    if (sub) {
+      targetLocation += `·${sub.label}`
+      if (selectedSpot.value) {
+        const spot = sub.spots.find((s: any) => s.id === selectedSpot.value)
+        if (spot) {
+          targetLocation += `·${spot.label}`
+        }
+      }
     }
   }
 
@@ -280,7 +372,7 @@ const onTouchEnd = (e: TouchEvent) => {
         </div>
       </div>
 
-      <!-- Sub Map (Specific Region) -->
+      <!-- Sub Map (Sub-Regions list) -->
       <div class="submap-area" v-if="view === 'sub' && selectedRegion">
         <div class="submap-header">
           <button class="back-btn" @click.stop="goBack">◀ 返回</button>
@@ -289,18 +381,47 @@ const onTouchEnd = (e: TouchEvent) => {
         
         <div class="submap-spots">
           <div 
-            v-for="spot in mapData[selectedRegion].spots" 
+            v-for="sub in mapData[selectedRegion].subs" 
+            :key="sub.id"
+            class="submap-spot-item"
+            :class="{ 
+              'active': currentActiveRegion === selectedRegion && currentActiveSub === sub.id
+            }"
+            @click.stop="openSpotMap(sub.id)"
+          >
+            <div class="spot-indicator"></div>
+            <span class="spot-name">{{ sub.label }}</span>
+            <span class="current-badge" v-if="currentActiveRegion === selectedRegion && currentActiveSub === sub.id">当前位置</span>
+            <span style="margin-left: auto; color: rgba(255,255,255,0.5)">▶</span>
+          </div>
+        </div>
+
+        <div class="submap-footer" v-if="mapData[selectedRegion].subs.length === 0 || !mapData[selectedRegion].subs.some((s:any) => s.spots && s.spots.length > 0)">
+          <button class="go-btn" @click.stop="travel">前往</button>
+        </div>
+      </div>
+
+      <!-- Spot Map (Facilities list) -->
+      <div class="submap-area" v-if="view === 'spot' && selectedRegion && selectedSub">
+        <div class="submap-header">
+          <button class="back-btn" @click.stop="goBack">◀ 返回</button>
+          <h2 class="submap-title">{{ mapData[selectedRegion].subs.find((s:any)=>s.id===selectedSub)?.label }}</h2>
+        </div>
+        
+        <div class="submap-spots">
+          <div 
+            v-for="spot in mapData[selectedRegion].subs.find((s:any)=>s.id===selectedSub)?.spots || []" 
             :key="spot.id"
             class="submap-spot-item"
             :class="{ 
               'selected': selectedSpot === spot.id,
-              'active': currentActiveRegion === selectedRegion && currentActiveSpot === spot.id
+              'active': currentActiveRegion === selectedRegion && currentActiveSub === selectedSub && currentActiveSpot === spot.id
             }"
             @click.stop="selectSpot(spot.id)"
           >
             <div class="spot-indicator"></div>
             <span class="spot-name">{{ spot.label }}</span>
-            <span class="current-badge" v-if="currentActiveRegion === selectedRegion && currentActiveSpot === spot.id">当前位置</span>
+            <span class="current-badge" v-if="currentActiveRegion === selectedRegion && currentActiveSub === selectedSub && currentActiveSpot === spot.id">当前位置</span>
           </div>
         </div>
 
